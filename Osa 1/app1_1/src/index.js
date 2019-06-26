@@ -1,15 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-const Otsikko = (props) => {
+const Header = (props) => {
     return(
         <div>
-            <h1>{props.course.nimi}</h1>
+            <h1>{props.course.name}</h1>
         </div>
     )
 };
 
-const Osa = (props) => {
+const Part = (props) => {
     return(
         <div>
             <p>{props.part} {props.task}</p>
@@ -17,49 +17,49 @@ const Osa = (props) => {
     )
 };
 
-const Sisalto = (props) => {
+const Content = (props) => {
     return (
         <div>
-            <Osa part={props.course.osat[0].nimi} task={props.course.osat[0].tehtavia}/>
-            <Osa part={props.course.osat[1].nimi} task={props.course.osat[1].tehtavia}/>
-            <Osa part={props.course.osat[2].nimi} task={props.course.osat[2].tehtavia}/>
+            <Part part={props.course.parts[0].name} task={props.course.parts[0].tasks}/>
+            <Part part={props.course.parts[1].name} task={props.course.parts[1].tasks}/>
+            <Part part={props.course.parts[2].name} task={props.course.parts[2].tasks}/>
         </div>
     );
 };
 
-const Yhteensa = (props) => {
+const Sum = (props) => {
     return (
         <div>
-            <p>Yhteensä {props.course.osat[0].tehtavia
-        +props.course.osat[1].tehtavia+props.course.osat[2].tehtavia} tehtävää</p>
+            <p>Yhteensä {props.course.parts[0].tasks
+        +props.course.parts[1].tasks+props.course.parts[2].tasks} tehtävää</p>
         </div>
     )
 };
 
 const App = () => {
-    const kurssi = {
-        nimi: 'Half Stack -sovelluskehitys',
-        osat: [
+    const course = {
+        name: 'Half Stack -sovelluskehitys',
+        parts: [
             {
-                nimi: 'Reactin perusteet',
-                tehtavia: 10
+                name: 'Reactin perusteet',
+                tasks: 10
             },
             {
-                nimi: 'Tiedonvälitys propseilla',
-                tehtavia: 7
+                name: 'Tiedonvälitys propseilla',
+                tasks: 7
             },
             {
-                nimi: 'Komponenttien tila',
-                tehtavia: 14
+                name: 'Komponenttien tila',
+                tasks: 14
             }
         ]
-    }
+    };
 
     return (
         <div>
-            <Otsikko course={kurssi}/>
-            <Sisalto course={kurssi}/>
-            <Yhteensa course={kurssi}/>
+            <Header course={course}/>
+            <Content course={course}/>
+            <Sum course={course}/>
         </div>
     )
 };
