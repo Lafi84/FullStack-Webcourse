@@ -1,7 +1,6 @@
 import React from 'react';
 
 const Filter = ({filter, onChange}) => {
-    console.log(filter, onChange);
     return (
         <div>
             <div>

@@ -23,7 +23,7 @@ function App() {
     <div>
         <h1>Countries</h1>
         <Filter filter={filter} onChange={filterChange}/>
-        <Countries filter={filter} countries={countries}/>
+        <Countries filter={filter} countries={countries} setFilter={setFilter}/>
     </div>
   );
 }
