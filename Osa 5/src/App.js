@@ -1,43 +1,31 @@
 import React from 'react';
 import { useState } from 'react';
-import login from './services/login';
+import Login from './components/Login';
+import Blogs from './components/Blogs';
+import './App.css';
 
 function App() {
-	// const [errorMessage, setErrorMessage] = useState(null)
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
+	const [errorMessage, setErrorMessage] = useState(null);
+	const [user, setUser] = useState(null);
 
-	const tryToLogin = async (event) => {
-		event.preventDefault();
-		const user = await login.login({ username, password });
-		// eslint-disable-next-line no-console
-		console.log(user);
+	const showError = (errorMessage) => {
+		setErrorMessage(errorMessage);
+
+		setTimeout(() => {
+			setErrorMessage('');
+		}, 5000);
+	};
+
+	const logout = () => {
+		window.localStorage.removeItem('blogUser');
+		setUser(null);
 	};
 
 	return (
 		<div className="App">
-			<h1>Login to Blog application</h1>
-			<form onSubmit={tryToLogin}>
-				<div className="field">
-					<label>
-						Username
-						<input
-							type="text"
-							value={username}
-							onChange={e => setUsername(e.target.value)}/>
-					</label>
-				</div>
-				<div className="field">
-					<label>
-						Password
-						<input
-							type="password"
-							value={password}
-							onChange={e => setPassword(e.target.value)}/>
-					</label>
-				</div>
-				<button type="submit">Submit</button>
-			</form>
+			{user ?
+				<Blogs user={user} logout={logout}/> :
+				<Login setUser={setUser}/>}
 		</div>
 	);
 }
