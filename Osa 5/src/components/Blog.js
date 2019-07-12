@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import blogService from '../services/blogs';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
 	const [opened, setOpened] = useState(false);
@@ -34,7 +34,7 @@ const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
 
 	const removeBlog = async () => {
 		const response = window.confirm(`Are you sure you want to remove blogpost ${blog.title} ?`);
-		if(response){
+		if (response) {
 			try {
 				const updatedBlog = await blogService.removeBlog(blog);
 				if (updatedBlog.error) {
@@ -51,16 +51,17 @@ const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
 
 	return (
 		<div className="blog-post">
-			<span onClick={toggleOpened}>{blog.title}</span> by {blog.author}
+			<div className="title-author"><span onClick={toggleOpened} className="title">{blog.title}</span> by {blog.author}</div>
 			{opened ?
 				<div>
 					<div>
 						{blog.url}
 					</div>
-					<div>
-						Likes: {blog.likes} {blog.liked ? null : <button onClick={likeBlog}>Like <span role="img" aria-label="thumbsup">👍</span></button>}
+					<div className="likes">
+						Likes: {blog.likes} {blog.liked ? null :
+							<button onClick={likeBlog} className="like-button">Like <span role="img" aria-label="thumbsup">👍</span></button>}
 					</div>
-					<div>
+					<div className="blog-user">
 						Added by {blog.user.name}
 					</div>
 					{showDelete ? <button onClick={removeBlog}>Remove</button> : null}
