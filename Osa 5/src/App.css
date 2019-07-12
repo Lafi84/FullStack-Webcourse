@@ -16,3 +16,11 @@
     padding: 10px;
     margin-bottom: 10px;
 }
+
+.blog-post {
+    padding: 20px;
+    border-color: black;
+    border-style: solid;
+    width: 80%;
+    margin-top: 10px;
+}

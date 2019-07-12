@@ -23,11 +23,36 @@ const createBook = async (newBook) => {
 
 	try {
 		const _response = await axios.post(baseUrl, newBook, config);
-		console.log('OK', _response);
 		return _response.data;
 	} catch(_err){
 		throw( _err.response.data.error ?  _err.response.data.error : _err);
 	}
 };
 
-export default { getAll, createBook, setToken };
+const updateBlog = async (likedBook) => {
+	const config = {
+		headers: { Authorization: token }
+	};
+
+	try {
+		const _response = await axios.put(baseUrl+'/'+likedBook.id, likedBook, config);
+		return _response.data;
+	} catch(_err){
+		throw( _err.response.data.error ?  _err.response.data.error : _err);
+	}
+};
+
+const removeBlog = async (likedBook) => {
+	const config = {
+		headers: { Authorization: token }
+	};
+
+	try {
+		const _response = await axios.delete(baseUrl+'/'+likedBook.id, config);
+		return _response;
+	} catch(_err){
+		throw( _err.response.data.error ?  _err.response.data.error : _err);
+	}
+};
+
+export default { getAll, createBook, setToken, updateBlog, removeBlog };
