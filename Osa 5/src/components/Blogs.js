@@ -4,6 +4,7 @@ import blogService from '../services/blogs';
 import Blog from './Blog';
 import Notification from './Notification';
 import Toggable from './Toggable';
+import PropTypes from 'prop-types'
 
 const Blogs = ({ user, logout }) => {
 	const [blogs, setBlogs] = useState([]);
@@ -12,6 +13,11 @@ const Blogs = ({ user, logout }) => {
 	const [successMessage, setSuccessMessage] = useState('');
 
 	const blogCreateRef = React.createRef();
+
+	Blogs.propTypes = {
+		user: PropTypes.object.isRequired,
+		logout: PropTypes.func.isRequired
+	};
 
 	const updateBlogs = (blogs) => {
 		//Why is it getting reversed sort when b1.likes - b2.likes?
@@ -41,7 +47,7 @@ const Blogs = ({ user, logout }) => {
 
 	useEffect(() => {
 		getBlogs();
-	}, []);
+	});
 
 	const showError = (errorMessage) => {
 		setErrorMessage(errorMessage);

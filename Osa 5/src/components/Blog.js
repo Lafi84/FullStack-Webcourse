@@ -1,9 +1,17 @@
 import React from 'react';
 import { useState } from 'react';
 import blogService from '../services/blogs';
+import PropTypes from 'prop-types'
 
 const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
 	const [opened, setOpened] = useState(false);
+
+	Blog.propTypes = {
+		showDelete: PropTypes.bool.isRequired,
+		blog: PropTypes.object.isRequired,
+		blogUpdated: PropTypes.func.isRequired,
+		showError: PropTypes.func.isRequired
+	};
 
 	const likeBlog = async () => {
 		try {
@@ -50,7 +58,7 @@ const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
 						{blog.url}
 					</div>
 					<div>
-						Likes: {blog.likes} {blog.liked ? null : <button onClick={likeBlog}>Like 👍</button>}
+						Likes: {blog.likes} {blog.liked ? null : <button onClick={likeBlog}>Like <span role="img" aria-label="thumbsup">👍</span></button>}
 					</div>
 					<div>
 						Added by {blog.user.name}

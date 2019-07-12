@@ -5,16 +5,7 @@ import Blogs from './components/Blogs';
 import './App.css';
 
 function App() {
-	const [errorMessage, setErrorMessage] = useState(null);
 	const [user, setUser] = useState(null);
-
-	const showError = (errorMessage) => {
-		setErrorMessage(errorMessage);
-
-		setTimeout(() => {
-			setErrorMessage('');
-		}, 5000);
-	};
 
 	const logout = () => {
 		window.localStorage.removeItem('blogUser');

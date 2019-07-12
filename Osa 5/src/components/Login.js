@@ -13,7 +13,7 @@ const Login = ({ setUser }) => {
 		if(savedUserJSON){
 			setUser(JSON.parse(savedUserJSON));
 		}
-	}, []);
+	});
 
 	const tryToLogin = async (event) => {
 		event.preventDefault();
