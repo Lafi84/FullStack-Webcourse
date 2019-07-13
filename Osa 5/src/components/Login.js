@@ -2,11 +2,12 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import login from '../services/login';
 import Notification from './Notification';
+import useField from '../utils/hooks/useField';
 
 const Login = ({ setUser }) => {
 	const [errorMessage, setErrorMessage] = useState(null);
-	const [username, setUsername] = useState('testuser');
-	const [password, setPassword] = useState('1234');
+	const username = useField('text');
+	const password = useField('password');
 
 	useEffect(() => {
 		const savedUserJSON = window.localStorage.getItem('blogUser');
@@ -18,13 +19,13 @@ const Login = ({ setUser }) => {
 	const tryToLogin = async (event) => {
 		event.preventDefault();
 		try {
-			const _user = await login.login({ username, password });
+			const _user = await login.login({ username: username.value, password: password.value });
 			if(_user.error) {
 				showError(_user.error);
 			}else {
 				window.localStorage.setItem('blogUser', JSON.stringify(_user));
-				setUsername('');
-				setPassword('');
+				username.reset();
+				password.reset();
 				setUser(_user);
 			}
 		} catch (_err) {
@@ -51,19 +52,13 @@ const Login = ({ setUser }) => {
 				<div className="field">
 					<label>
 						Username
-						<input
-							type="text"
-							value={username}
-							onChange={e => setUsername(e.target.value)}/>
+						<input {...username.getInit()}/>
 					</label>
 				</div>
 				<div className="field">
 					<label>
 						Password
-						<input
-							type="password"
-							value={password}
-							onChange={e => setPassword(e.target.value)}/>
+						<input {...password.getInit()}/>
 					</label>
 				</div>
 				<button type="submit">Submit</button>

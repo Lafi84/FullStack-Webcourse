@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import useField from '../utils/hooks/useField';
 import blogService from '../services/blogs';
 import Blog from './Blog';
 import Notification from './Notification';
@@ -8,9 +9,11 @@ import PropTypes from 'prop-types'
 
 const Blogs = ({ user, logout }) => {
 	const [blogs, setBlogs] = useState([]);
-	const [newBook, setNewBook] = useState({});
 	const [errorMessage, setErrorMessage] = useState('');
 	const [successMessage, setSuccessMessage] = useState('');
+	const title = useField('text');
+	const author = useField('text');
+	const url = useField('text');
 
 	const blogCreateRef = React.createRef();
 
@@ -71,13 +74,15 @@ const Blogs = ({ user, logout }) => {
 	const createNewBook = async (e) => {
 		e.preventDefault();
 		try{
-			const createdBook = await blogService.createBook(newBook);
+			const createdBook = await blogService.createBook({ title: title.value, author: author.value, url: url.value});
 			if(createdBook && createdBook.error){
 				showError(createdBook.error);
 			}else if(createdBook) {
 				blogCreateRef.current.toggleVisibility();
 				getBlogs();
-				setNewBook({});
+				title.reset();
+				author.reset();
+				url.reset();
 				showSuccess(`A new blog ${createdBook.title} by ${createdBook.author} added`);
 			}
 		} catch (_err) {
@@ -96,28 +101,19 @@ const Blogs = ({ user, logout }) => {
 					<div className="field">
 						<label>
 						Title
-							<input
-								type="text"
-								value={newBook.title || ''}
-								onChange={e => setNewBook({ ...newBook, title: e.target.value })}/>
+							<input {...title.getInit()}/>
 						</label>
 					</div>
 					<div className="field">
 						<label>
 						Author
-							<input
-								type="text"
-								value={newBook.author || ''}
-								onChange={e => setNewBook({ ...newBook, author: e.target.value })}/>
+							<input {...author.getInit()}/>
 						</label>
 					</div>
 					<div className="field">
 						<label>
 					Url
-							<input
-								type="text"
-								value={newBook.url || ''}
-								onChange={e => setNewBook({ ...newBook, url: e.target.value })}/>
+							<input {...url.getInit()}/>
 						</label>
 					</div>
 					<button type="submit">Create book</button>
