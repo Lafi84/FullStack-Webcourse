@@ -20,12 +20,14 @@ const Blogs = ({ user, logout }) => {
 	};
 
 	const updateBlogs = (blogs) => {
+		console.log('UpdateBlogs');
 		//Why is it getting reversed sort when b1.likes - b2.likes?
 		blogs = blogs.sort((b1, b2) => b2.likes - b1.likes);
 		setBlogs(blogs);
 	};
 
 	const getBlogs = async () => {
+		console.log('GetBlogs');
 		blogService.setToken(user.token);
 		try {
 			const _blogs = await blogService.getAll();
@@ -46,8 +48,9 @@ const Blogs = ({ user, logout }) => {
 	};
 
 	useEffect(() => {
+		console.log('useEffect');
 		getBlogs();
-	});
+	}, []);
 
 	const showError = (errorMessage) => {
 		setErrorMessage(errorMessage);
@@ -83,7 +86,7 @@ const Blogs = ({ user, logout }) => {
 	};
 
 	return (
-		<div >
+		<div className="blogs" >
 			<h2>Blogs</h2>
 			<h3>{user.name} logged in <button onClick={logout}>Logout</button></h3>
 			{errorMessage ? <Notification className="error" message={errorMessage}/>:''}

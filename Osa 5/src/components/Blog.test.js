@@ -1,7 +1,19 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, cleanup, fireEvent, getByText, not, toBeUndefined, toBeNull } from '@testing-library/react';
+import {
+	render,
+	cleanup,
+	fireEvent,
+	getByText,
+	not,
+	toBeUndefined,
+	toBeNull,
+	waitForElement
+} from '@testing-library/react';
 import Blog from './Blog';
+import App from '../App';
+
+jest.mock('../services/blogs');
 
 describe('<Blog />', () => {
 
@@ -71,4 +83,43 @@ describe('<Blog />', () => {
 	// 	const div = component.container.querySelector('.togglableContent');
 	// 	expect(div).toHaveStyle('display: none');
 	// });
+});
+
+describe('<App />', () => {
+	afterEach(cleanup);
+
+	test('if no user logged, login is rendered and blogs are not', async () => {
+		const component = render(
+			<App/>
+		);
+		component.rerender(<App/>);
+
+		await waitForElement(
+			() => component.getByText('Password')
+		);
+
+		expect(component.container.querySelector('.login-form')).not.toBeNull();
+		expect(component.container.querySelector('.blogs')).toBeNull();
+	});
+
+	test('if  user logged, show blogs', async () => {
+		const user = {
+			username: 'testuser',
+			token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWQiOiI1ZDI1ZDE3MTY1MGZjZTQxNWNhOGJjYjEiLCJpYXQiOjE1NjI5MjY5NjZ9.4mCTQNXMxJJeJA98U1GqYt9XDU8XJhhHqqwY8DA3Rig',
+			name: 'Testikäyttäjä'
+		};
+
+		localStorage.setItem('blogUser', JSON.stringify(user));
+		const component = render(
+			<App/>
+		);
+		component.rerender(<App/>);
+
+		await waitForElement(
+			() => component.getByText('Type wars')
+		);
+
+		expect(component.container.querySelector('.login-form')).toBeNull();
+		expect(component.container.querySelector('.blogs')).not.toBeNull();
+	});
 });
