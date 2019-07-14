@@ -2,7 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d69d7998-bbd9-4210-911b-63d24b95656d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../redux-anecdotes/src/components/Filter.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../redux-anecdotes/src/reducers/filterReducer.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../redux-anecdotes/src/reducers/notificationReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Osa 5/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Osa 5/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../redux-anecdotes/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../redux-anecdotes/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../redux-anecdotes/src/components/AnecdoteForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/../redux-anecdotes/src/components/AnecdoteForm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../redux-anecdotes/src/components/AnecdoteList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../redux-anecdotes/src/components/AnecdoteList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../redux-anecdotes/src/components/Notification.js" beforeDir="false" afterPath="$PROJECT_DIR$/../redux-anecdotes/src/components/Notification.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../redux-anecdotes/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../redux-anecdotes/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../redux-anecdotes/src/reducers/anecdoteReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/../redux-anecdotes/src/reducers/anecdoteReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
@@ -26,7 +35,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/reducer.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="323">
@@ -56,10 +65,10 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
+            <state relative-caret-position="62">
               <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
@@ -167,12 +176,12 @@
       <option name="presentableId" value="Default" />
       <updated>1563022241164</updated>
       <workItem from="1563022244323" duration="3843000" />
-      <workItem from="1563086886605" duration="2758000" />
+      <workItem from="1563086886605" duration="3069000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="6601000" />
+    <option name="totallyTimeSpent" value="6912000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -224,16 +233,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/reducer.test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="368">
@@ -248,6 +247,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
           <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="62">
+          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
