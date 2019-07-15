@@ -1,4 +1,4 @@
-const getId = () => (100000 * Math.random()).toFixed(0);
+import anecdotesService from '../services/anecdotes';
 
 const anecdoteReducer = (state = [], action) => {
 	console.log('state now: ', state);
@@ -7,8 +7,8 @@ const anecdoteReducer = (state = [], action) => {
 	let newState = state;
 
 	switch (action.type) {
-	case 'VOTE':
-		newState = state.map(anecdote => anecdote.id !== action.data.id ? anecdote : { ...anecdote, votes: anecdote.votes+1 });
+	case 'SET_ANECDOTE':
+		newState = state.map(anecdote => anecdote.id !== action.data.anecdote.id ? anecdote : action.data.anecdote);
 		break;
 	case 'CREATE_ANECDOTE':
 		newState = state.concat(action.data);
@@ -25,6 +25,13 @@ const anecdoteReducer = (state = [], action) => {
 	return newState;
 };
 
+export const initAnecdotes = () => {
+	return async (dispatch) => {
+		const anecdotes = await anecdotesService.getAll();
+		dispatch({ type: 'SET_ANECDOTES', data: { anecdotes } });
+	};
+};
+
 export const setAnecdotes = (anecdotes) => {
 	return {
 		type: 'SET_ANECDOTES',
@@ -32,21 +39,34 @@ export const setAnecdotes = (anecdotes) => {
 	};
 };
 
-export const voteAnecdote = (id) => {
-	return {
-		type: 'VOTE',
-		data: { id }
+export const voteAnecdote = (anecdote) => {
+	return async (dispatch) => {
+		const _votes = anecdote.votes +1;
+		const _changedAnecdote = await anecdotesService.voteAnecdote(anecdote.id, _votes);
+		dispatch({
+			type: 'SET_ANECDOTE',
+			data: {
+				anecdote: {
+					content: _changedAnecdote.content,
+					id: _changedAnecdote.id,
+					votes: _votes
+				}
+			}
+		});
 	};
 };
 
-export const createAnecdote = (anecdote) => {
-	return {
-		type: 'CREATE_ANECDOTE',
-		data: {
-			content: anecdote.content,
-			id: anecdote.id,
-			votes: 0
-		}
+export const createAnecdote = (anecdoteString) => {
+	return async (dispatch) => {
+		const _createdAnecdote = await anecdotesService.createAnecdote(anecdoteString);
+		dispatch({
+			type: 'CREATE_ANECDOTE',
+			data: {
+				content: _createdAnecdote.content,
+				id: _createdAnecdote.id,
+				votes: 0
+			}
+		});
 	};
 };
 

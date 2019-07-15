@@ -1,3 +1,12 @@
+export const showNotification = (text, timeout) => {
+	return async (dispatch) => {
+		dispatch({ type: 'CHANGE_NOTIFICATION', notification: text });
+		await setTimeout(() => {
+			dispatch({ type: 'CLEAR_NOTIFICATION' });
+		}, timeout);
+	};
+};
+
 export const changeNotification = (newText) => {
 	return { type: 'CHANGE_NOTIFICATION', notification: newText };
 };
