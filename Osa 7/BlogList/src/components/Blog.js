@@ -2,8 +2,10 @@ import React from 'react';
 import { useState } from 'react';
 import blogService from '../services/blogs';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { showNotification, NOTIFICATIONTYPE } from '../reducers/notificationReducer';
 
-const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
+const Blog = ({ showDelete, blog, blogUpdated, showNotification }) => {
 	const [opened, setOpened] = useState(false);
 
 	Blog.propTypes = {
@@ -18,13 +20,13 @@ const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
 			blog.likes = blog.likes + 1;
 			const updatedBlog = await blogService.updateBlog(blog);
 			if (updatedBlog.error) {
-				showError(updatedBlog.error);
+				showNotification(updatedBlog.error, NOTIFICATIONTYPE.ERROR, 5000);
 			} else {
 				blog.liked = true;
 				blogUpdated(blog);
 			}
-		} catch (_err) {
-			showError(_err.message);
+		} catch (err) {
+			showNotification(err.message, NOTIFICATIONTYPE.ERROR, 5000);
 		}
 	};
 
@@ -38,13 +40,13 @@ const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
 			try {
 				const updatedBlog = await blogService.removeBlog(blog);
 				if (updatedBlog.error) {
-					showError(updatedBlog.error);
+					showNotification(updatedBlog.error, NOTIFICATIONTYPE.ERROR, 5000);
 				} else {
 					blog.deleted = true;
 					blogUpdated(blog);
 				}
-			} catch (_err) {
-				showError(_err.message);
+			} catch (err) {
+				showNotification(err.message, NOTIFICATIONTYPE.ERROR, 5000);
 			}
 		}
 	};
@@ -70,4 +72,7 @@ const Blog = ({ showDelete, blog, blogUpdated, showError }) => {
 	);
 };
 
-export default Blog;
+export default connect(
+	undefined,
+	{ showNotification }
+)(Blog);

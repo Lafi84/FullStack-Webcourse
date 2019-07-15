@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 const Notification = ({ message, className }) => {
+	console.log('Notification', message, className);
 	if (message === null) {
 		return null;
 	}
@@ -12,4 +14,10 @@ const Notification = ({ message, className }) => {
 	);
 };
 
-export default Notification;
+const mapStateToProps = (state) => {
+	return { message: state.notification.notification, className: state.notification.notificationType };
+};
+
+export default connect(
+	mapStateToProps
+)(Notification);

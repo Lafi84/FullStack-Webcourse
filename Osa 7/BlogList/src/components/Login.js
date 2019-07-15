@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 import login from '../services/login';
 import Notification from './Notification';
 import useField from '../utils/hooks/useField';
+import { connect } from 'react-redux';
+import { showNotification, NOTIFICATIONTYPE } from '../reducers/notificationReducer';
 
-const Login = ({ setUser }) => {
-	const [errorMessage, setErrorMessage] = useState(null);
+const Login = ({ setUser, showNotification }) => {
 	const username = useField('text');
 	const password = useField('password');
 
@@ -37,17 +38,13 @@ const Login = ({ setUser }) => {
 	};
 
 	const showError = (errorMessage) => {
-		setErrorMessage(errorMessage);
-
-		setTimeout(() => {
-			setErrorMessage('');
-		}, 5000);
+		showNotification(errorMessage, NOTIFICATIONTYPE.ERROR, 5000);
 	};
 
 	return (
 		<div className="login-form">
 			<h1>Login to Blog application</h1>
-			{errorMessage ? <Notification className="error" message={errorMessage}/>:''}
+			<Notification/>
 			<form onSubmit={tryToLogin}>
 				<div className="field">
 					<label>
@@ -67,4 +64,7 @@ const Login = ({ setUser }) => {
 	);
 };
 
-export default Login;
+export default connect(
+	undefined,
+	{ showNotification }
+)(Login);

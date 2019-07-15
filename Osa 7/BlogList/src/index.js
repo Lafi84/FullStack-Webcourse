@@ -1,5 +1,27 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import notificationReducer from './reducers/notificationReducer';
+import { Provider } from 'react-redux';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+
+const reducer = combineReducers({
+	notification: notificationReducer
+});
+
+const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));
+
+const render = () => {
+	ReactDOM.render(
+		<Provider store={store}>
+			<App />
+		</Provider>,
+		document.getElementById('root')
+	);
+};
+
+render();
+store.subscribe(render);

@@ -2,15 +2,15 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import useField from '../utils/hooks/useField';
 import blogService from '../services/blogs';
+import { showNotification, NOTIFICATIONTYPE } from '../reducers/notificationReducer';
 import Blog from './Blog';
 import Notification from './Notification';
 import Toggable from './Toggable';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-const Blogs = ({ user, logout }) => {
+const Blogs = ({ user, logout, showNotification }) => {
 	const [blogs, setBlogs] = useState([]);
-	const [errorMessage, setErrorMessage] = useState('');
-	const [successMessage, setSuccessMessage] = useState('');
 	const title = useField('text');
 	const author = useField('text');
 	const url = useField('text');
@@ -56,25 +56,17 @@ const Blogs = ({ user, logout }) => {
 	}, []);
 
 	const showError = (errorMessage) => {
-		setErrorMessage(errorMessage);
-
-		setTimeout(() => {
-			setErrorMessage('');
-		}, 5000);
+		showNotification(errorMessage, NOTIFICATIONTYPE.ERROR, 5000);
 	};
 
 	const showSuccess = (successMessage) => {
-		setSuccessMessage(successMessage);
-
-		setTimeout(() => {
-			setSuccessMessage('');
-		}, 5000);
+		showNotification(successMessage, NOTIFICATIONTYPE.SUCCESS, 5000);
 	};
 
 	const createNewBook = async (e) => {
 		e.preventDefault();
 		try{
-			const createdBook = await blogService.createBook({ title: title.value, author: author.value, url: url.value});
+			const createdBook = await blogService.createBook({ title: title.value, author: author.value, url: url.value });
 			if(createdBook && createdBook.error){
 				showError(createdBook.error);
 			}else if(createdBook) {
@@ -94,8 +86,7 @@ const Blogs = ({ user, logout }) => {
 		<div className="blogs" >
 			<h2>Blogs</h2>
 			<h3>{user.name} logged in <button onClick={logout}>Logout</button></h3>
-			{errorMessage ? <Notification className="error" message={errorMessage}/>:''}
-			{successMessage ? <Notification className="success" message={successMessage}/>:''}
+			<Notification/>
 			<Toggable ref={blogCreateRef} buttonLabel="Add blog">
 				<form onSubmit={createNewBook}>
 					<div className="field">
@@ -126,4 +117,7 @@ const Blogs = ({ user, logout }) => {
 	);
 };
 
-export default Blogs;
+export default connect(
+	undefined,
+	{ showNotification }
+)(Blogs);
