@@ -1,19 +1,22 @@
 import React from 'react';
 import { createAnecdote } from '../reducers/anecdoteReducer';
 import { changeNotification, clearNotification } from '../reducers/notificationReducer';
+import { connect } from 'react-redux';
+import anecdoteService from '../services/anecdotes';
 
-const AnecdoteForm = ({ store }) => {
-	const createNewAnecdote = (e) => {
+const AnecdoteForm = ({ createAnecdote, changeNotification, clearNotification }) => {
+	const createNewAnecdote = async (e) => {
 		e.preventDefault();
 
 		const _newAnecdote = e.target.anecdote.value;
 		if(_newAnecdote && _newAnecdote.length>2){
-			store.dispatch(createAnecdote(_newAnecdote));
 			e.target.anecdote.value = '';
+			const _createdAnecdote = await anecdoteService.createAnecdote(_newAnecdote);
+			createAnecdote(_createdAnecdote);
 
-			store.dispatch(changeNotification('Created new anecdote: ' + _newAnecdote));
+			changeNotification('Created new anecdote: ' + _newAnecdote);
 			setTimeout(() => {
-				store.dispatch(clearNotification());
+				clearNotification();
 			}, 5000);
 		}
 	};
@@ -31,4 +34,13 @@ const AnecdoteForm = ({ store }) => {
 	);
 };
 
-export default AnecdoteForm;
+const mapDispatchToProps = {
+	createAnecdote,
+	changeNotification,
+	clearNotification
+};
+
+export default connect(
+	null,
+	mapDispatchToProps
+)(AnecdoteForm);

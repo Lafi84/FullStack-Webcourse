@@ -1,7 +1,8 @@
 import React from 'react';
 import { changeFilter } from '../reducers/filterReducer';
+import { connect } from 'react-redux';
 
-const Filter = ({ store }) => {
+const Filter = ({ changeFilter }) => {
 	const style = {
 		marginBottom: 10
 	};
@@ -10,10 +11,17 @@ const Filter = ({ store }) => {
 		<div style={style}>
 			<label>
 				Filter
-				<input type="text" onChange={e => store.dispatch(changeFilter(e.target.value))}/>
+				<input type="text" onChange={e => changeFilter(e.target.value)}/>
 			</label>
 		</div>
 	);
 };
 
-export default Filter;
+const mapDispatchToProps = {
+	changeFilter
+};
+
+export default connect(
+	null,
+	mapDispatchToProps
+)(Filter);
