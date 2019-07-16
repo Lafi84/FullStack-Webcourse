@@ -11,7 +11,7 @@ import {
 } from 'react-router-dom';
 import Notification from './components/Notification';
 import Blogs from './components/Blogs';
-import BlogPage from './components/BlogPage';
+import Blog from './components/Blog';
 import Menu from './components/Menu';
 
 function App( { user, initSavedUser, logout, ...props } ) {
@@ -40,7 +40,7 @@ function App( { user, initSavedUser, logout, ...props } ) {
 			<Route exact path="/users" render={() => <Users/>}/>
 			<Route exact path="/blogs" render={() => <Blogs/>}/>
 			<Route exact path="/user/:id" render={({ match }) => <User id={match.params.id}/>}/>
-			<Route exact path="/blog/:id" render={({ match }) => <BlogPage id={match.params.id}/>}/>
+			<Route exact path="/blog/:id" render={({ match }) => <Blog id={match.params.id}/>}/>
 		</div>
 	);
 }

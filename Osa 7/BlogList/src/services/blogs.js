@@ -68,4 +68,4 @@ const addComment = async (id, comment) => {
 	}
 };
 
-export default { getAll, createBlog, setToken, updateBlog, removeBlog };
+export default { getAll, createBlog, setToken, updateBlog, removeBlog, addComment };
