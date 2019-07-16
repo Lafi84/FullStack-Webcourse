@@ -2,28 +2,30 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 import { connect } from 'react-redux';
 import { logout } from '../reducers/userReducer';
+import { Menu, Button } from 'antd';
 
-const Menu = ({ user, logout }) => {
+const TopMenu = ({ user, logout }) => {
 	const style= {
 		width: '100%',
-		'background-color': 'lightgray',
+		backgroundColor: 'lightgray',
 		padding: '5px'
 	};
 
 	const padding = {
 		paddingRight: 5
 	};
+
 	return (
-		<div style={style}>
-			<Link style={padding} to="/blogs">Blogs</Link>
-			<Link style={padding} to="/users">users</Link>
-			{user ? <span>
-				{user.name} logged in <button onClick={logout}>Logout</button>
-			</span> : null}
-		</div>
+		<Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }}>
+			<Menu.Item key="1"><Link to="/blogs">Blogs</Link></Menu.Item>
+			<Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>
+			{user ? <Menu.Item>
+				{user.name} logged in <Button onClick={logout}>Logout</Button>
+			</Menu.Item> : null}
+		</Menu>
 	);
 };
 
-const mapStateToProps = (state) => {return { user: state.user }};
+const mapStateToProps = (state) => {return { user: state.user };};
 
-export default connect(mapStateToProps, {logout})(Menu);
+export default connect(mapStateToProps, { logout })(TopMenu);
