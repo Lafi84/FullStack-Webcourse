@@ -4,15 +4,13 @@ import useField from '../utils/hooks/useField';
 import blogService from '../services/blogs';
 import { showNotification, NOTIFICATIONTYPE } from '../reducers/notificationReducer';
 import Blog from './Blog';
-import Notification from './Notification';
 import Toggable from './Toggable';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { initBlogs } from '../reducers/blogReducer';
-import { logout } from '../reducers/userReducer';
+import { Link } from 'react-router-dom';
 
 const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
-	console.log('Blogs:', blogs);
+	console.log('Blogs:', user);
 	const title = useField('text');
 	const author = useField('text');
 	const url = useField('text');
@@ -20,20 +18,11 @@ const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 	const blogCreateRef = React.createRef();
 
 	useEffect(() => {
-		blogService.setToken(user.token);
-		initBlogs();
+		if(user) {
+			blogService.setToken(user.token);
+			initBlogs();
+		}
 	}, []);
-
-	Blogs.propTypes = {
-		user: PropTypes.object.isRequired,
-		logout: PropTypes.func.isRequired
-	};
-
-	const updateBlogs = () => {
-		console.log('UpdateBlogs');
-		//Why is it getting reversed sort when b1.likes - b2.likes?
-		blogs = blogs.sort((b1, b2) => b2.likes - b1.likes);
-	};
 
 	const showError = (errorMessage) => {
 		showNotification(errorMessage, NOTIFICATIONTYPE.ERROR, 5000);
@@ -64,7 +53,6 @@ const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 	return (
 		<div className="blogs" >
 			<h2>Blogs</h2>
-			<Notification/>
 			<Toggable ref={blogCreateRef} buttonLabel="Add blog">
 				<form onSubmit={createNewBook}>
 					<div className="field">
@@ -89,7 +77,9 @@ const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 				</form>
 			</Toggable>
 			{blogs.map(blog =>
-				<Blog key={blog.id} blog={blog} showDelete={blog.user.username === user.username} />
+				<div className="blog-post" key={blog.id}>
+				<Link to={'/blog/'+blog.id}>{blog.title}</Link>
+				</div>
 			)}
 		</div>
 	);

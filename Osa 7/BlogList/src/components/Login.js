@@ -45,7 +45,6 @@ const Login = ({ showNotification, login }) => {
 	return (
 		<div className="login-form">
 			<h1>Login to Blog application</h1>
-			<Notification/>
 			<form onSubmit={tryToLogin}>
 				<div className="field">
 					<label>
