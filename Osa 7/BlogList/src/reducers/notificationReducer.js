@@ -19,7 +19,7 @@ export const showNotification = (text, notificationType, timeout) => {
 	};
 };
 
-const notificationReducer = (state = { notification: 'Initial notification',
+const notificationReducer = (state = { notification: null,
 	notificationType: NOTIFICATIONTYPE.SUCCESS
 }, action) => {
 

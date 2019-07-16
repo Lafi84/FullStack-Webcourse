@@ -11,8 +11,8 @@ import {
 } from 'react-router-dom';
 import Notification from './components/Notification';
 import Blogs from './components/Blogs';
-import Blog from './components/Blog';
 import BlogPage from './components/BlogPage';
+import Menu from './components/Menu';
 
 function App( { user, initSavedUser, logout, ...props } ) {
 	console.log('app_user', user);
@@ -34,8 +34,8 @@ function App( { user, initSavedUser, logout, ...props } ) {
 
 	return (
 		<div className="App">
+			{user ?	<Menu/> : null}
 			<Notification/>
-			{user ?	<h3>{user.name} logged in <button onClick={logout}>Logout</button></h3> : null}
 			<Route exact path="/" render={() => <Login/>}/>
 			<Route exact path="/users" render={() => <Users/>}/>
 			<Route exact path="/blogs" render={() => <Blogs/>}/>

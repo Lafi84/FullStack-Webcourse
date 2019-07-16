@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import useField from '../utils/hooks/useField';
 import blogService from '../services/blogs';
 import { showNotification, NOTIFICATIONTYPE } from '../reducers/notificationReducer';
-import Blog from './Blog';
 import Toggable from './Toggable';
 import { connect } from 'react-redux';
 import { initBlogs } from '../reducers/blogReducer';
@@ -78,7 +77,7 @@ const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 			</Toggable>
 			{blogs.map(blog =>
 				<div className="blog-post" key={blog.id}>
-				<Link to={'/blog/'+blog.id}>{blog.title}</Link>
+					<Link to={'/blog/'+blog.id}>{blog.title} by {blog.user.name}</Link>
 				</div>
 			)}
 		</div>

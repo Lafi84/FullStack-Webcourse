@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import React from 'react';
 import { connect } from 'react-redux';
+import { logout } from '../reducers/userReducer';
 
-const Menu = ({ user }) => {
+const Menu = ({ user, logout }) => {
 	const style= {
 		width: '100%',
-		'background-color': 'light-grey'
+		'background-color': 'lightgray',
+		padding: '5px'
 	};
 
 	const padding = {
@@ -15,13 +17,13 @@ const Menu = ({ user }) => {
 		<div style={style}>
 			<Link style={padding} to="/blogs">Blogs</Link>
 			<Link style={padding} to="/users">users</Link>
-			{user ? <div>
-				{user.name} <button onClick={logout}></button>
-			</div> : null}
+			{user ? <span>
+				{user.name} logged in <button onClick={logout}>Logout</button>
+			</span> : null}
 		</div>
 	);
 };
 
-const mapStateToProps = (state) => { user: state.user };
+const mapStateToProps = (state) => {return { user: state.user }};
 
-export default connect(mapStateToProps)(Menu);
+export default connect(mapStateToProps, {logout})(Menu);
