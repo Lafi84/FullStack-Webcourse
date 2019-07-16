@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import blogReducer from './reducers/blogReducer';
 import userReducer from './reducers/userReducer';
 import usersReducer from './reducers/usersReducer';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 
 const reducer = combineReducers({
@@ -23,7 +24,9 @@ const store = createStore(reducer, composeWithDevTools(applyMiddleware(thunk)));
 const render = () => {
 	ReactDOM.render(
 		<Provider store={store}>
-			<App />
+			<Router>
+				<App />
+			</Router>
 		</Provider>,
 		document.getElementById('root')
 	);
