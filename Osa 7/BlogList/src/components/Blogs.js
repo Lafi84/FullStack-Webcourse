@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { initBlogs } from '../reducers/blogReducer';
 import { logout } from '../reducers/userReducer';
 
-const Blogs = ({ user, logout, blogs, showNotification, initBlogs }) => {
+const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 	console.log('Blogs:', blogs);
 	const title = useField('text');
 	const author = useField('text');
@@ -64,7 +64,6 @@ const Blogs = ({ user, logout, blogs, showNotification, initBlogs }) => {
 	return (
 		<div className="blogs" >
 			<h2>Blogs</h2>
-			<h3>{user.name} logged in <button onClick={logout}>Logout</button></h3>
 			<Notification/>
 			<Toggable ref={blogCreateRef} buttonLabel="Add blog">
 				<form onSubmit={createNewBook}>
@@ -105,5 +104,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
 	mapStateToProps,
-	{ showNotification, logout, initBlogs }
+	{ showNotification, initBlogs }
 )(Blogs);
