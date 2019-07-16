@@ -5,18 +5,8 @@ import { logout } from '../reducers/userReducer';
 import { Menu, Button } from 'antd';
 
 const TopMenu = ({ user, logout }) => {
-	const style= {
-		width: '100%',
-		backgroundColor: 'lightgray',
-		padding: '5px'
-	};
-
-	const padding = {
-		paddingRight: 5
-	};
-
 	return (
-		<Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{ lineHeight: '64px' }}>
+		<Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']} style={{ lineHeight: '64px' }}>
 			<Menu.Item key="1"><Link to="/blogs">Blogs</Link></Menu.Item>
 			<Menu.Item key="2"><Link to="/users">Users</Link></Menu.Item>
 			{user ? <Menu.Item>

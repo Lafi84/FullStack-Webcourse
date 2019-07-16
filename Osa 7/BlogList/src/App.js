@@ -39,11 +39,13 @@ function App( { user, initSavedUser, logout, ...props } ) {
 	return (
 		<div className="App">
 			<Layout>
-				<Header>
-					{user ?	<TopMenu/> : null}
-				</Header>
+				{user ?
+					<Header>
+						<TopMenu/>
+					</Header>
+					: <h1 style={{ padding: '50px' }}>Login to Blog application (testuser / 1234)</h1>}
 				<Notification/>
-				<Content>
+				<Content style={{ padding: '0 50px' }}>
 					<Route exact path="/" render={() => <Login/>}/>
 					<Route exact path="/users" render={() => <Users/>}/>
 					<Route exact path="/blogs" render={() => <Blogs/>}/>

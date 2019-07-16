@@ -5,23 +5,32 @@ import { connect } from 'react-redux';
 import {
 	Link
 } from 'react-router-dom';
+import { Table, PageHeader } from 'antd';
 
 const Users = ({ users, initUsers }) => {
 	useEffect(() => {
 		initUsers();
 	}, []);
 
+	const columns = [
+		{
+			title: 'Name',
+			dataIndex: 'name',
+			key: 'name',
+			// eslint-disable-next-line react/display-name
+			render: (name, user) => <Link to={'/user/'+user.id}>{name}</Link>,
+		},
+		{
+			title: 'Total blogs',
+			dataIndex: 'blogs.length',
+			key: 'blogs',
+		},
+	];
+
 	return (
 		<div>
-			<h2>Users</h2>
-			<table>
-				<thead>
-					<tr><th></th><th><strong>blogs created</strong></th></tr>
-				</thead>
-				<tbody>
-				{users ? users.map(user => <tr key={user.id}><td><Link to={'/user/'+user.id}>{user.name}</Link></td><td>{user.blogs.length}</td></tr>) : null}
-				</tbody>
-			</table>
+			<PageHeader title="Users"/>
+			<Table dataSource={users} columns={columns}/>
 		</div>
 	);
 };

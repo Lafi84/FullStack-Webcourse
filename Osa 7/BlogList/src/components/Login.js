@@ -5,10 +5,11 @@ import useField from '../utils/hooks/useField';
 import { connect } from 'react-redux';
 import { showNotification, NOTIFICATIONTYPE } from '../reducers/notificationReducer';
 import { login } from '../reducers/userReducer';
+import { Button, Form, Icon, Input } from 'antd';
 
-const Login = ({ showNotification, login }) => {
-	const username = useField('text');
-	const password = useField('password');
+const Login = ({ showNotification, login, ...props }) => {
+	// const username = useField('text');
+	// const password = useField('password');
 
 	// useEffect(() => {
 	// 	const savedUserJSON = window.localStorage.getItem('blogUser');
@@ -17,54 +18,65 @@ const Login = ({ showNotification, login }) => {
 	// 	}
 	// }, []);
 
-	const tryToLogin = async (event) => {
+	const tryToLogin = (event) => {
 		event.preventDefault();
-		try {
-			// const _user =
-				await login(username.value, password.value);
-			// if(_user.error) {
-			// 	showError(_user.error);
-			// }else {
-			// 	window.localStorage.setItem('blogUser', JSON.stringify(_user));
-				username.reset();
-				password.reset();
-				// setUser(_user);
-			// }
-		} catch (_err) {
-			if(_err.message.indexOf('401')>=0)
-				showError('Login failed, check username or password');
-			else
-				showError(_err.message);
-		}
+		props.form.validateFields(async (err, values) => {
+			if (!err) {
+				console.log('Received values of form: ', values);
+
+				try {
+					await login(values.username, values.password);
+				} catch (_err) {
+					if(_err.message.indexOf('401')>=0)
+						showError('Login failed, check username or password');
+					else
+						showError(_err.message);
+				}
+			}
+		});
 	};
 
 	const showError = (errorMessage) => {
 		showNotification(errorMessage, NOTIFICATIONTYPE.ERROR, 5000);
 	};
 
+	const { getFieldDecorator } = props.form;
+
 	return (
-		<div className="login-form">
-			<h1>Login to Blog application</h1>
-			<form onSubmit={tryToLogin}>
-				<div className="field">
-					<label>
-						Username
-						<input {...username.getInit()}/>
-					</label>
-				</div>
-				<div className="field">
-					<label>
-						Password
-						<input {...password.getInit()}/>
-					</label>
-				</div>
-				<button type="submit">Submit</button>
-			</form>
-		</div>
+		<Form onSubmit={tryToLogin} className="login-form">
+			<Form.Item>
+				{getFieldDecorator('username', {
+					rules: [{ required: true, message: 'Please input your username!' }],
+				})(
+					<Input
+						prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+						placeholder="Username"
+					/>,
+				)}
+			</Form.Item>
+			<Form.Item>
+				{getFieldDecorator('password', {
+					rules: [{ required: true, message: 'Please input your Password!' }],
+				})(
+					<Input
+						prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+						type="password"
+						placeholder="Password"
+					/>,
+				)}
+			</Form.Item>
+			<Form.Item>
+				<Button type="primary" htmlType="submit" className="login-form-button">
+						Log in
+				</Button>
+			</Form.Item>
+		</Form>
 	);
 };
+
+const WrappedNormalLoginForm = Form.create({ name: 'normal_login' })(Login);
 
 export default connect(
 	undefined,
 	{ showNotification, login }
-)(Login);
+)(WrappedNormalLoginForm);

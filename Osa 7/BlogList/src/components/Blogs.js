@@ -7,6 +7,7 @@ import Toggable from './Toggable';
 import { connect } from 'react-redux';
 import { initBlogs } from '../reducers/blogReducer';
 import { Link } from 'react-router-dom';
+import { List, PageHeader } from 'antd';
 
 const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 	console.log('Blogs:', user);
@@ -51,7 +52,7 @@ const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 
 	return (
 		<div className="blogs" >
-			<h2>Blogs</h2>
+			<PageHeader title="Blogs"/>
 			<Toggable ref={blogCreateRef} buttonLabel="Add blog">
 				<form onSubmit={createNewBook}>
 					<div className="field">
@@ -75,11 +76,14 @@ const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 					<button type="submit">Create book</button>
 				</form>
 			</Toggable>
-			{blogs.map(blog =>
-				<div className="blog-post" key={blog.id}>
-					<Link to={'/blog/'+blog.id}>{blog.title} by {blog.user.name}</Link>
-				</div>
-			)}
+			<List
+				bordered
+				dataSource={blogs}
+				renderItem={blog => (
+					<List.Item><Link to={'/blog/'+blog.id}>{blog.title} by {blog.user.author}</Link>
+					</List.Item>
+				)}
+			/>
 		</div>
 	);
 };
