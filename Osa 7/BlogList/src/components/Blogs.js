@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import useField from '../utils/hooks/useField';
 import blogService from '../services/blogs';
 import { showNotification, NOTIFICATIONTYPE } from '../reducers/notificationReducer';
@@ -8,9 +8,11 @@ import Notification from './Notification';
 import Toggable from './Toggable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { initBlogs } from '../reducers/blogReducer';
+import { logout } from '../reducers/userReducer';
 
-const Blogs = ({ user, logout, blogs, showNotification }) => {
-	console.log('Blogs:', blogs)
+const Blogs = ({ user, logout, blogs, showNotification, initBlogs }) => {
+	console.log('Blogs:', blogs);
 	const title = useField('text');
 	const author = useField('text');
 	const url = useField('text');
@@ -19,28 +21,18 @@ const Blogs = ({ user, logout, blogs, showNotification }) => {
 
 	useEffect(() => {
 		blogService.setToken(user.token);
-	});
+		initBlogs();
+	}, []);
 
 	Blogs.propTypes = {
 		user: PropTypes.object.isRequired,
 		logout: PropTypes.func.isRequired
 	};
 
-	const updateBlogs = (blogs) => {
+	const updateBlogs = () => {
 		console.log('UpdateBlogs');
 		//Why is it getting reversed sort when b1.likes - b2.likes?
 		blogs = blogs.sort((b1, b2) => b2.likes - b1.likes);
-		// setBlogs(blogs);
-	};
-
-	const blogUpdated = (blog) => {
-		const _updatedBlogIndex = blogs.findIndex(b => b.id === blog.id);
-		const _copyArray = [...blogs];
-		if(blog.deleted)
-			_copyArray.splice(_updatedBlogIndex, 1);
-		else
-			_copyArray.splice(_updatedBlogIndex, 1, blog);
-		updateBlogs(_copyArray);
 	};
 
 	const showError = (errorMessage) => {
@@ -106,11 +98,12 @@ const Blogs = ({ user, logout, blogs, showNotification }) => {
 
 const mapStateToProps = (state) => {
 	return {
-		blogs: state.blogs
+		blogs: state.blogs,
+		user: state.user
 	};
 };
 
 export default connect(
 	mapStateToProps,
-	{ showNotification }
+	{ showNotification, logout, initBlogs }
 )(Blogs);

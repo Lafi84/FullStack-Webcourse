@@ -1,30 +1,31 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import Login from './components/Login';
 import Blogs from './components/Blogs';
 import './App.css';
-import { initBlogs } from './reducers/blogReducer';
 import { connect } from 'react-redux';
+import { initSavedUser } from './reducers/userReducer';
 
-function App( { initBlogs } ) {
-	const [user, setUser] = useState(null);
+function App( { user } ) {
+	console.log('app_user', user);
 
 	useEffect(() => {
-		initBlogs();
+		initSavedUser();
 	},[]);
-
-	const logout = () => {
-		window.localStorage.removeItem('blogUser');
-		setUser(null);
-	};
 
 	return (
 		<div className="App">
 			{user ?
-				<Blogs user={user} logout={logout}/> :
-				<Login setUser={setUser}/>}
+				<Blogs/> :
+				<Login/>}
 		</div>
 	);
 }
 
-export default connect(null, { initBlogs })(App);
+const mapStateToProps = (state) => {
+	return {
+		user: state.user
+	};
+};
+
+export default connect(mapStateToProps, { initSavedUser })(App);

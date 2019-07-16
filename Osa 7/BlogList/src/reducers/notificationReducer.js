@@ -19,14 +19,6 @@ export const showNotification = (text, notificationType, timeout) => {
 	};
 };
 
-export const changeNotification = (newText) => {
-	return { type: 'CHANGE_NOTIFICATION', notification: newText };
-};
-
-export const clearNotification = () => {
-	return { type: 'CLEAR_NOTIFICATION' };
-};
-
 const notificationReducer = (state = { notification: 'Initial notification',
 	notificationType: NOTIFICATIONTYPE.SUCCESS
 }, action) => {
