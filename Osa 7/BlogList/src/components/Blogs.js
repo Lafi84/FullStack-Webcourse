@@ -9,13 +9,17 @@ import Toggable from './Toggable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const Blogs = ({ user, logout, showNotification }) => {
-	const [blogs, setBlogs] = useState([]);
+const Blogs = ({ user, logout, blogs, showNotification }) => {
+	console.log('Blogs:', blogs)
 	const title = useField('text');
 	const author = useField('text');
 	const url = useField('text');
 
 	const blogCreateRef = React.createRef();
+
+	useEffect(() => {
+		blogService.setToken(user.token);
+	});
 
 	Blogs.propTypes = {
 		user: PropTypes.object.isRequired,
@@ -26,18 +30,7 @@ const Blogs = ({ user, logout, showNotification }) => {
 		console.log('UpdateBlogs');
 		//Why is it getting reversed sort when b1.likes - b2.likes?
 		blogs = blogs.sort((b1, b2) => b2.likes - b1.likes);
-		setBlogs(blogs);
-	};
-
-	const getBlogs = async () => {
-		console.log('GetBlogs');
-		blogService.setToken(user.token);
-		try {
-			const _blogs = await blogService.getAll();
-			updateBlogs(_blogs);
-		} catch (_err) {
-			showError(_err.message);
-		}
+		// setBlogs(blogs);
 	};
 
 	const blogUpdated = (blog) => {
@@ -50,11 +43,6 @@ const Blogs = ({ user, logout, showNotification }) => {
 		updateBlogs(_copyArray);
 	};
 
-	useEffect(() => {
-		console.log('useEffect');
-		getBlogs();
-	}, []);
-
 	const showError = (errorMessage) => {
 		showNotification(errorMessage, NOTIFICATIONTYPE.ERROR, 5000);
 	};
@@ -66,12 +54,11 @@ const Blogs = ({ user, logout, showNotification }) => {
 	const createNewBook = async (e) => {
 		e.preventDefault();
 		try{
-			const createdBook = await blogService.createBook({ title: title.value, author: author.value, url: url.value });
+			const createdBook = await blogService.createBlog({ title: title.value, author: author.value, url: url.value });
 			if(createdBook && createdBook.error){
 				showError(createdBook.error);
 			}else if(createdBook) {
 				blogCreateRef.current.toggleVisibility();
-				getBlogs();
 				title.reset();
 				author.reset();
 				url.reset();
@@ -111,13 +98,19 @@ const Blogs = ({ user, logout, showNotification }) => {
 				</form>
 			</Toggable>
 			{blogs.map(blog =>
-				<Blog key={blog.id} blog={blog} showError={showError} blogUpdated={blogUpdated} showDelete={blog.user.username === user.username} />
+				<Blog key={blog.id} blog={blog} showDelete={blog.user.username === user.username} />
 			)}
 		</div>
 	);
 };
 
+const mapStateToProps = (state) => {
+	return {
+		blogs: state.blogs
+	};
+};
+
 export default connect(
-	undefined,
+	mapStateToProps,
 	{ showNotification }
 )(Blogs);

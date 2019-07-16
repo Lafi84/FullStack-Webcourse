@@ -16,7 +16,7 @@ const getAll = () => {
 	return request.then(response => response.data);
 };
 
-const createBook = async (newBook) => {
+const createBlog = async (newBook) => {
 	const config = {
 		headers: { Authorization: token }
 	};
@@ -29,30 +29,30 @@ const createBook = async (newBook) => {
 	}
 };
 
-const updateBlog = async (likedBook) => {
+const updateBlog = async (updatedBlog) => {
 	const config = {
 		headers: { Authorization: token }
 	};
 
 	try {
-		const _response = await axios.put(baseUrl+'/'+likedBook.id, likedBook, config);
+		const _response = await axios.put(baseUrl+'/'+updatedBlog.id, updatedBlog, config);
 		return _response.data;
 	} catch(_err){
 		throw( _err.response.data.error ?  _err.response.data.error : _err);
 	}
 };
 
-const removeBlog = async (likedBook) => {
+const removeBlog = async (id) => {
 	const config = {
 		headers: { Authorization: token }
 	};
 
 	try {
-		const _response = await axios.delete(baseUrl+'/'+likedBook.id, config);
+		const _response = await axios.delete(baseUrl+'/'+id, config);
 		return _response;
 	} catch(_err){
 		throw( _err.response.data.error ?  _err.response.data.error : _err);
 	}
 };
 
-export default { getAll, createBook, setToken, updateBlog, removeBlog };
+export default { getAll, createBlog, setToken, updateBlog, removeBlog };

@@ -1,11 +1,17 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Login from './components/Login';
 import Blogs from './components/Blogs';
 import './App.css';
+import { initBlogs } from './reducers/blogReducer';
+import { connect } from 'react-redux';
 
-function App() {
+function App( { initBlogs } ) {
 	const [user, setUser] = useState(null);
+
+	useEffect(() => {
+		initBlogs();
+	},[]);
 
 	const logout = () => {
 		window.localStorage.removeItem('blogUser');
@@ -21,4 +27,4 @@ function App() {
 	);
 }
 
-export default App;
+export default connect(null, { initBlogs })(App);
