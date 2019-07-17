@@ -33,7 +33,7 @@ const Blog = ({ blog, likeBlog, addComment }) => {
 			<h3>Comments</h3>
 			<form onSubmit={submitNewComment}>
 				<label>
-					<input type="text" name="commentInput"></input>
+					<input id="commentInput" type="text" name="commentInput"></input>
 				</label>
 				<button type="submit">Add comment</button>
 			</form>

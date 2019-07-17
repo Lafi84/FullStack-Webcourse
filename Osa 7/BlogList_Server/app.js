@@ -35,6 +35,12 @@ app.use(bodyParser.json());
 app.use(middleware.requestLogger);
 app.use(middleware.tokenExtractor);
 
+if (config.NODE_ENV === 'test') {
+	console.log('adding test routes');
+	const testingRouter = require('./controllers/testing');
+	app.use('/api/testing', testingRouter);
+}
+
 app.use('/api/blogs', blogsRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);

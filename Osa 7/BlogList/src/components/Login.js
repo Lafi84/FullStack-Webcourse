@@ -1,7 +1,4 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import Notification from './Notification';
-import useField from '../utils/hooks/useField';
 import { connect } from 'react-redux';
 import { showNotification, NOTIFICATIONTYPE } from '../reducers/notificationReducer';
 import { login } from '../reducers/userReducer';
@@ -56,7 +53,7 @@ const Login = ({ showNotification, login, ...props }) => {
 			</Form.Item>
 			<Form.Item>
 				{getFieldDecorator('password', {
-					rules: [{ required: true, message: 'Please input your Password!' }],
+					rules: [{ required: true, message: 'Please input your password!' }],
 				})(
 					<Input
 						prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}

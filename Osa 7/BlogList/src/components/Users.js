@@ -18,7 +18,7 @@ const Users = ({ users, initUsers }) => {
 			dataIndex: 'name',
 			key: 'name',
 			// eslint-disable-next-line react/display-name
-			render: (name, user) => <Link to={'/user/'+user.id}>{name}</Link>,
+			render: (name, user) => <Link id={user.username} to={'/user/'+user.id}>{name}</Link>,
 		},
 		{
 			title: 'Total blogs',

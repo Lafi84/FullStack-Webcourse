@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { List, PageHeader } from 'antd';
 
 const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
-	console.log('Blogs:', user);
+	console.log('Blogs:', blogs);
 	const title = useField('text');
 	const author = useField('text');
 	const url = useField('text');
@@ -58,29 +58,29 @@ const Blogs = ({ user, blogs, showNotification, initBlogs }) => {
 					<div className="field">
 						<label>
 						Title
-							<input {...title.getInit()}/>
+							<input id='newBlogTitle' {...title.getInit()}/>
 						</label>
 					</div>
 					<div className="field">
 						<label>
 						Author
-							<input {...author.getInit()}/>
+							<input id='newBlogAuthor' {...author.getInit()}/>
 						</label>
 					</div>
 					<div className="field">
 						<label>
 					Url
-							<input {...url.getInit()}/>
+							<input id='newBlogUrl' {...url.getInit()}/>
 						</label>
 					</div>
-					<button type="submit">Create book</button>
+					<button type="submit">Create blog</button>
 				</form>
 			</Toggable>
 			<List
 				bordered
 				dataSource={blogs}
 				renderItem={blog => (
-					<List.Item><Link to={'/blog/'+blog.id}>{blog.title} by {blog.user.author}</Link>
+					<List.Item><Link to={'/blog/'+blog.id}>{blog.title} by {blog.user.name}</Link>
 					</List.Item>
 				)}
 			/>
