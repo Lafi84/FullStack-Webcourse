@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import AuthorEditForm from './Author_Edit_Form';
 
-const Authors = (props) => {
-	if (!props.show) {
+const Authors = ({ show, result, editAuthor }) => {
+	if (!show) {
 		return null;
 	}
-	const authors = [];
 
+	if (result.loading) {
+		return <div>loading...</div>;
+	}
+
+	const authors = result.data.allAuthors;
 	return (
 		<div>
 			<h2>authors</h2>
@@ -30,6 +35,7 @@ const Authors = (props) => {
 				</tbody>
 			</table>
 
+			<AuthorEditForm authors={authors} editAuthor={editAuthor}/>
 		</div>
 	);
 };
