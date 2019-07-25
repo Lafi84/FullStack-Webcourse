@@ -1,9 +1,11 @@
+const jwt = require('jsonwebtoken');
 const _ = require('lodash');
 const uuidv1 = require('uuid/v1');
-const {ApolloServer, gql, UserInputError} = require('apollo-server');
+const {ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server');
 const mongoose = require('mongoose');
 const Author = require('./models/author');
 const Book = require('./models/book');
+const User = require('./models/user');
 require('dotenv').config();
 
 mongoose.set('useFindAndModify', false);
@@ -107,6 +109,16 @@ let books = [
 ];
 
 const typeDefs = gql`
+	type User {
+	  username: String!
+	  favoriteGenre: String!
+	  id: ID!
+	}
+	
+	type Token {
+	  value: String!
+	}
+
   type Author {
     id: ID!
   	name: String!
@@ -127,6 +139,7 @@ const typeDefs = gql`
     authorCount: Int!
     allBooks (author: String, genre: String): [Book!]
     allAuthors (name: String): [Author!]
+  	me: User
   }
   
   type Mutation {
@@ -141,6 +154,16 @@ const typeDefs = gql`
   		name: String!
   		setBornTo: Int!
   	): Author
+  	
+	createUser(
+		username: String!
+		favoriteGenre: String!
+	  ): User
+	  
+	login(
+		username: String!
+		password: String!
+	): Token
   }
 `;
 
@@ -182,10 +205,13 @@ const resolvers = {
 			}));
 
 			return authors;
+		},
+		me: async (root, args, context) => {
+			return context.currentUser;
 		}
 	},
 	Mutation: {
-		addBook: async (root, args) => {
+		addBook: async (root, args, {currentUser}) => {
 			// const author = authors.find(author => author.name === args.author);
 			// if (!author)
 			// 	authors = authors.concat({id: uuidv1(), name: args.author});
@@ -194,17 +220,27 @@ const resolvers = {
 			// books = books.concat(book);
 			// return book;
 
+			if (!currentUser) {
+				throw new AuthenticationError('not authenticated');
+			}
+
 			let author = await Author.findOne({ name: args.author });
 			console.log(author);
-			if (author.length === 0)
-				author = new Author({ name: args.author }).save();
+			try{
+				if (author.length === 0)
+					author = new Author({ name: args.author }).save();
 
-			let createdBook = await new Book({ ...args, author: author._id }).save();
-			createdBook = await createdBook.populate('author').execPopulate();
+				let createdBook = await new Book({ ...args, author: author._id }).save();
+				createdBook = await createdBook.populate('author').execPopulate();
 
-			return createdBook;
+				return createdBook;
+			} catch (error) {
+				throw new UserInputError(error.message, {
+					invalidArgs: args,
+				});
+			}
 		},
-		editAuthor: async (root, args) => {
+		editAuthor: async (root, args, {currentUser}) => {
 			// let editAuthor = authors.find((author) => author.name === args.name);
 			// if (!editAuthor)
 			// 	return null;
@@ -214,23 +250,77 @@ const resolvers = {
 			// editAuthor = {...editAuthor, born: args.setBornTo, bookCount: authorMap[editAuthor.name].length};
 			// authors = authors.map(author => author.name === args.name ? editAuthor : author);
 
-			const editAuthor = await Author.findOne({name: args.name}).exec();
-			if(!editAuthor)
-				return null;
-			console.log(editAuthor);
-			editAuthor.born = args.setBornTo;
+			if (!currentUser) {
+				throw new AuthenticationError('not authenticated');
+			}
 
-			const books = await Book.find({}).populate({path: 'author', match: {name: editAuthor.name}}).exec();
-			editAuthor.bookCount = books.filter(book => book.author).length;
+			if(args.setBornTo<1850)
+				throw new UserInputError('Born year must be higher than 1850',{
+					invalidArgs: {setBornTo: args.setBornTo}
+				});
+			if(args.setBornTo>new Date().getUTCFullYear())
+				throw new UserInputError('Born year must be lower than current year',{
+					invalidArgs: {setBornTo: args.setBornTo}
+				});
 
-			return editAuthor;
-		}
+			try{
+				const editAuthor = await Author.findOne({name: args.name}).exec();
+				if(!editAuthor)
+					return null;
+				console.log(editAuthor);
+				editAuthor.born = args.setBornTo;
+
+				const books = await Book.find({}).populate({path: 'author', match: {name: editAuthor.name}}).exec();
+				editAuthor.bookCount = books.filter(book => book.author).length;
+				return editAuthor;
+			} catch (error) {
+				throw new UserInputError(error.message, {
+					invalidArgs: args,
+				});
+			}
+		},
+		createUser: (root, args) => {
+			const user = new User({ ...args });
+
+			return user.save()
+				.catch(error => {
+					throw new UserInputError(error.message, {
+						invalidArgs: args,
+					});
+				});
+		},
+		login: async (root, args) => {
+			const user = await User.findOne({ username: args.username });
+
+			if ( !user || args.password !== 'secret' ) {
+				throw new UserInputError('wrong credentials');
+			}
+
+			const userForToken = {
+				username: user.username,
+				id: user._id,
+			};
+
+			// eslint-disable-next-line no-undef
+			return { value: jwt.sign(userForToken, process.env.JWT_SECRET) };
+		},
 	}
 };
 
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
+	context: async ({ req }) => {
+		const auth = req ? req.headers.authorization : null;
+		if (auth && auth.toLowerCase().startsWith('bearer ')) {
+			const decodedToken = jwt.verify(
+				// eslint-disable-next-line no-undef
+				auth.substring(7), process.env.JWT_SECRET
+			);
+			const currentUser = await User.findById(decodedToken.id).populate('friends');
+			return { currentUser };
+		}
+	}
 });
 
 server.listen().then(({url}) => {
