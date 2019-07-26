@@ -227,8 +227,10 @@ const resolvers = {
 			let author = await Author.findOne({ name: args.author });
 			console.log(author);
 			try{
-				if (author.length === 0)
-					author = new Author({ name: args.author }).save();
+				if (!author) {
+					author = new Author({name: args.author});
+					await author.save();
+				}
 
 				let createdBook = await new Book({ ...args, author: author._id }).save();
 				createdBook = await createdBook.populate('author').execPopulate();
