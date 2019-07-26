@@ -2,12 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import { ApolloProvider } from '@apollo/react-hooks';
-import ApolloClient from 'apollo-boost';
-import NewBook from "./components/NewBook";
-
-const client = new ApolloClient({
-	uri: 'http://localhost:4000/graphql'
-});
+import client from './utils/book_apollo_client';
 
 ReactDOM.render(
 	<ApolloProvider client={client} >

@@ -4,7 +4,16 @@ import Books from './components/Books';
 import NewBook from './components/NewBook';
 import { gql } from 'apollo-boost';
 import { useApolloClient, useQuery, useMutation } from '@apollo/react-hooks';
+import LoginForm from './components/Login_Form';
+import Recommendations from './components/Recommendations';
 
+const LOGIN = gql`
+  mutation login($username: String!, $password: String!) {
+    login(username: $username, password: $password)  {
+      value
+    }
+  }
+`;
 
 const ALL_AUTHORS = gql`
   {
@@ -17,13 +26,24 @@ const ALL_AUTHORS = gql`
   }
 `;
 
-const ALL_BOOKS = gql`
+const ME = gql`
   {
-  	allBooks {
+  	me {
+    	username,
+    	favoriteGenre
+  	}
+  }
+`;
+
+const ALL_BOOKS = gql`
+  query allBooks($genre: String){
+  	allBooks(genre: $genre) {
     	id,
     	title,
     	published,
-    	author,
+		author{
+			name
+    	},
     	genres
   	}
   }
@@ -40,7 +60,10 @@ const ADD_BOOK = gql`
 		id,
 		title,
 		published,
-		author,
+		author{
+			id,
+			name
+    	},
 		genres
     }
   }
@@ -61,8 +84,9 @@ const EDIT_AUTHOR = gql`
 `;
 
 const App = () => {
-	const [page, setPage] = useState('authors');
+	const [page, setPage] = useState('login');
 	const [errorMessage, setErrorMessage] = useState(null);
+	const [token, setToken] = useState(null);
 
 	const handleError = (error) => {
 		setErrorMessage(error.graphQLErrors[0].message);
@@ -73,11 +97,12 @@ const App = () => {
 
 	const client = useApolloClient();
 	const authors = useQuery(ALL_AUTHORS);
+	const user = useQuery(ME);
 	const books = useQuery(ALL_BOOKS);
 
 	const [addBook] = useMutation(ADD_BOOK, {
 		onError: handleError,
-		refetchQueries: [{ query: ALL_BOOKS }]
+		refetchQueries: [{ query: ALL_BOOKS, ALL_AUTHORS }]
 	});
 
 	const [editAuthor] = useMutation(EDIT_AUTHOR, {
@@ -85,13 +110,23 @@ const App = () => {
 		refetchQueries: [{ query: ALL_AUTHORS }]
 	});
 
+	const [login] = useMutation(LOGIN, {
+		onError: handleError
+	});
+
+	const logout = () => {
+		setToken(null);
+		localStorage.removeItem('books-user-token');
+	};
 
 	return (
 		<div>
 			<div>
 				<button onClick={() => setPage('authors')}>authors</button>
 				<button onClick={() => setPage('books')}>books</button>
-				<button onClick={() => setPage('add')}>add book</button>
+				{token ? <button onClick={() => setPage('recommendations')}>recommendations</button>: null }
+				{token ? <button onClick={() => setPage('add')}>add book</button>: null }
+				{token ? <button onClick={logout}>logout</button> : <button onClick={() => setPage('login')}>login</button>}
 			</div>
 
 			{errorMessage &&
@@ -100,11 +135,16 @@ const App = () => {
 			</div>
 			}
 
-			<Authors result={authors} editAuthor={editAuthor} show={page === 'authors'}/>
+			<LoginForm login={login} setToken={setToken} setPage={setPage} show={page === 'login'}/>
 
-			<Books result={books} show={page === 'books'}/>
+			<Authors result={authors} editAuthor={editAuthor} showEdit={!!token} show={page === 'authors'}/>
+
+			<Books client={client} result={books} ALL_BOOKS={ALL_BOOKS} show={page === 'books'}/>
+
+			<Recommendations client={client} ALL_BOOKS={ALL_BOOKS} result={{ books, user }} show={page === 'recommendations'}/>
 
 			<NewBook addBook={addBook} show={page === 'add'}/>
+
 		</div>
 	);
 };

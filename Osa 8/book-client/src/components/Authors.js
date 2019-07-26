@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AuthorEditForm from './Author_Edit_Form';
 
-const Authors = ({ show, result, editAuthor }) => {
+const Authors = ({ show, result, editAuthor, showEdit }) => {
 	if (!show) {
 		return null;
 	}
@@ -9,7 +9,6 @@ const Authors = ({ show, result, editAuthor }) => {
 	if (result.loading) {
 		return <div>loading...</div>;
 	}
-
 	const authors = result.data.allAuthors;
 	return (
 		<div>
@@ -35,7 +34,7 @@ const Authors = ({ show, result, editAuthor }) => {
 				</tbody>
 			</table>
 
-			<AuthorEditForm authors={authors} editAuthor={editAuthor}/>
+			{showEdit ? <AuthorEditForm authors={authors} editAuthor={editAuthor}/> : null}
 		</div>
 	);
 };
